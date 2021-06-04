@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <fieldset disabled>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label"><h1>Your Private Key</h1></label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="15">{{ key }}</textarea>
+        </div>
+    </fieldset>
+{% endblock content %}

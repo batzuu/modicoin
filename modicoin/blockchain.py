@@ -60,12 +60,16 @@ class Blockchain:
 		f.close()
 
 		public_key = key.publickey().export_key()
+		private_key = key.export_key()
 		f = open("public.pem", "wb")
 		f.write(public_key)
 		f.close()
-
-		print(public_key.decode("ASCII"))
-		return public_key.decode("ASCII")
+		key = {}
+		key = {'public':public_key.decode("ASCII"),
+			'private':private_key.decode("ASCII")
+			}
+		print(key)
+		return key
 	
 	def mine(self):
 		if not self.unconfirmed_trainsactions:

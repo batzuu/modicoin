@@ -1,6 +1,8 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, session as sess
+from flask_login.utils import login_fresh
+from sqlalchemy.orm import session
 from wtforms.validators import Email
-from modicoin import app, db, bcrypt, blockchain
+from modicoin import app, db, bcrypt, blockchain, login_manager
 from modicoin.forms import RegistrationForm, LoginForm
 from modicoin.models import User
 from flask_login import login_user, current_user, logout_user, login_required
@@ -13,7 +15,8 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_pass = bcrypt.generate_password_hash(form.password.data)
-        public_key = blockchain.generate_keys()
+        key = blockchain.generate_keys()
+        public_key = key.get('public')
         user = User(
             email=form.email.data,
             password=hashed_pass,
@@ -22,8 +25,10 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
-        flash(f"Account created for {form.username.data}! You can now login", "success")
-        return redirect(url_for("login"))
+        login_user(user)
+        flash(f"Account created for {form.username.data}! Please copy your private key and keep it secure", "info")
+        sess["key"] = key.get('private')
+        return redirect(url_for("key_download"))
     return render_template("register.html", title="Register", form=form)
 
 
@@ -66,6 +71,12 @@ def about():
 def logout():
     logout_user()
     return redirect(url_for("login"))
+
+@app.route("/key_download")
+def key_download():
+    key = request.args.get('key')
+    return render_template("key_download.html", key=sess["key"], user=current_user)
+
 
 
 @app.route("/")
