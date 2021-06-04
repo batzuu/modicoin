@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<section class="mainsec">
+	<legend class="border-bottom mb-4">Account:</legend>
+	<fieldset disabled>
+		<div class="mb-3">
+			<div class="label">Username</div>
+			<input class="form-control" placeholder="{{ user.username }}">
+		</div>
+		<div class="mb-3">
+			<div class="label">E-mail</div>
+			<input class="form-control" placeholder="{{ user.email }}">
+		</div>
+		<div class="mb-3">
+			<div class="label">Key</div>
+			<input class="form-control" placeholder="{{ user.public_key }}">
+		</div>
+		<div class="mb-3">
+			<div class="label">Balance</div>
+			<input class="form-control" placeholder="{{ user.balance }}">
+		</div>
+	</fieldset>
+</section>
+{% endblock content %}

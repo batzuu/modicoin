@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/1d87b5048d.js" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="mainflex">
+        <nav class="navbar">
+            <ul class="navbar-nav">
+                <li class="nav-logo">
+                    <a href="#" class="nav-link">
+                        <span class="link-text logo-text">Modi coin</span>
+                        <i class="fas fa-angle-double-right fa-2x"></i>
+                    </a>
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-shopping-basket fa-lg"></i>
+                        <span class="link-text">Buy</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fab fa-wpexplorer fa-lg"></i>
+                        <span class="link-text">Explore</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-church fa-lg"></i>
+                        <span class="link-text">Mandir</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-carrot fa-lg"></i>
+                        <span class="link-text">Mooli</span>
+                    </a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a href="{{ url_for('login') }}" class="nav-link">
+                        <i class="fas fa-sign-in-alt fa-lg"></i>
+                        <span class="link-text">Login</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('register') }}" class="nav-link">
+                        <i class="fas fa-registered fa-lg"></i>
+                        <span class="link-text">Register</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                <li class="nav-item last-nav" id="themeButton">
+                    <a href="{{ url_for('logout') }}" class="nav-link">
+                        <i class="fab fa-bity fa-lg"></i>
+                        <span class="link-text">LogOut</span>
+                    </a>
+                </li>
+                {% else %}
+                <li></li>
+                {% endif %}
+            </ul>
+        </nav>
+        <main>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% block content %}
+            {% endblock %}
+        </main>
+        <nav class="rightnav"></nav>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
