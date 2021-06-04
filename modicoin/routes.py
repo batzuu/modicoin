@@ -1,9 +1,9 @@
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from wtforms.validators import Email
 from modicoin import app, db, bcrypt, blockchain
 from modicoin.forms import RegistrationForm, LoginForm
 from modicoin.models import User
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -45,12 +45,15 @@ def login():
                 flash("Admin Login Success", "danger")
             else:
                 flash("Welcome!", "success")
+            next_page = request.args.get('next')
+            if next_page:
+                return redirect(next_page)
             return redirect(url_for("home"))
         flash("Login failed! Invalid email and/or password", "danger")
     return render_template("login.html", title="Login", form=form)
 
-
 @app.route("/account")
+@login_required
 def account():
     return render_template("account.html", user=current_user)
 
