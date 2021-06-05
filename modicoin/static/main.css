@@ -199,3 +199,18 @@ main .alert {
 .alert {
 	position:inherit;
 }
+
+.card,
+.card li {
+	position: inherit;
+}
+
+.main-2 {
+	display: flex;
+    flex-direction: column;
+	margin-left : 5rem;
+	margin-right: 5rem;
+	padding: 1rem;
+	padding-right: 10rem;
+    width: 100%;
+}

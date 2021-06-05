@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="main-2">
+	<legend class="border-bottom mb-4">Block Chain</legend>
+	{% for blockObj in blockchain.chain %}
+		<div class="card" style="width: 18rem">
+			<div class="card-body">
+				<h5 class="card-header">
+					Block #{{ blockObj.index }}
+				</h5>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item">Transactions <br>{{ blockObj.transactions|length }}</li>
+					<li class="list-group-item">Hash <br>{{ blockObj.hash[0:20] }}</li>
+					<li class="list-group-item">Previous Block Hash <br>{{ blockObj.prev_hash[0:20] }}</li>
+					<li class="list-group-item">Timestamp<br>{{ blockObj.timestamp }}</li>
+				</ul>
+				<a href="#" class="btn btn-primary">Show Transactions</a>
+			</div>
+		</div>
+</div>
+{% endfor %}
+{% endblock content %}

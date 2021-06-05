@@ -1,6 +1,7 @@
 from Crypto.PublicKey import RSA
 import datetime
 import time
+from datetime import datetime
 import json
 from hashlib import sha256
 
@@ -12,7 +13,7 @@ class Blockchain:
 		self.miner_reward = 50
 
 	def generate_genesis_block(self):
-		genesis_block = Block(0, [], "0", time.time()) 
+		genesis_block = Block(0, [], "0", datetime.now().strftime("%m/%d/%Y, %H:%M:%S")) 
 		genesis_block_hash = genesis_block.compute_hash()
 		self.chain.append(genesis_block)
 	
@@ -76,7 +77,7 @@ class Blockchain:
 			return False
 		
 		last_block = self.last_block
-		new_block = Block(last_block.index + 1, self.unconfirmed_trainsactions, last_block.hash, time.time())
+		new_block = Block(last_block.index + 1, self.unconfirmed_trainsactions, last_block.hash, datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
 
 		proof = self.proof_of_work(new_block)
 		self.add_block(new_block, proof)
@@ -91,6 +92,7 @@ class Block:
 		self.timestamp = timestamp
 		self.hash = self.compute_hash()
 		self.nonce = nonce
+		self.miner = ""
 
 	def compute_hash(self):
 		block_str = json.dumps(self.__dict__, sort_keys=True)
@@ -101,7 +103,7 @@ class Transaction:
 		self.sender = sender
 		self.receiver = receiver
 		self.amt = amt
-		self.time = time.time()
+		self.time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 		self.hash = self.calculate_hash()
 
 	def calculate_hash(self):

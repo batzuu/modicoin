@@ -3,7 +3,7 @@ from flask_login.utils import login_fresh
 from sqlalchemy.orm import session
 from wtforms.validators import Email
 from modicoin import app, db, bcrypt, blockchain, login_manager
-from modicoin.forms import RegistrationForm, LoginForm
+from modicoin.forms import KeyDownForm, RegistrationForm, LoginForm, TransactionForm
 from modicoin.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -31,11 +31,24 @@ def register():
         return redirect(url_for("key_download"))
     return render_template("register.html", title="Register", form=form)
 
+@app.route("/explore")
+@login_required
+def explore():
+    return render_template("chainexplore.html", blockchain=blockchain)
 
 @app.route("/home")
+@login_required
 def home():
     return render_template("home.html", title="Homepage")
 
+@app.route("/transaction", methods=["GET", "POST"])
+@login_required
+def trainsaction():
+    form = TransactionForm()
+    if form.validate_on_submit():
+        print(f"{form.receiver.data}  {form.amount.data} {form.private_key.data}")
+        return redirect(url_for('home')) 
+    return render_template("transaction.html", form=form, user=current_user)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -72,10 +85,14 @@ def logout():
     logout_user()
     return redirect(url_for("login"))
 
-@app.route("/key_download")
+@app.route("/key_download", methods=["GET", "POST"])
 def key_download():
+    form = KeyDownForm()
+    if form.validate_on_submit():
+        flash(f'Welcom {current_user.username}!', 'success')
+        return redirect(url_for('home'))
     key = request.args.get('key')
-    return render_template("key_download.html", key=sess["key"], user=current_user)
+    return render_template("key_download.html", key=sess["key"], user=current_user, form=form)
 
 
 

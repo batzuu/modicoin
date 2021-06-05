@@ -7,4 +7,12 @@
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="15">{{ key }}</textarea>
         </div>
     </fieldset>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="mb-3 form-check">
+            {{ form.accept_check.label(class="form-check-label") }}
+            {{ form.accept_check(class="form-check-input") }}
+        </div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
 {% endblock content %}
