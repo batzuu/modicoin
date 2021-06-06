@@ -29,15 +29,15 @@
                 </li>
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-shopping-basket fa-lg"></i>
-                        <span class="link-text">Buy</span>
+                    <a href="{{ url_for('explore') }}" class="nav-link">
+                        <i class="fab fa-wpexplorer fa-lg"></i>
+                        <span class="link-text">Explore</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fab fa-wpexplorer fa-lg"></i>
-                        <span class="link-text">Explore</span>
+                    <a href="{{ url_for('transaction') }}" class="nav-link">
+                        <i class="fas fa-paper-plane fa-lg"></i>
+                        <span class="link-text">Send</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -47,9 +47,9 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ url_for('account') }}" class="nav-link">
                         <i class="fas fa-carrot fa-lg"></i>
-                        <span class="link-text">Mooli</span>
+                        <span class="link-text">Account</span>
                     </a>
                 </li>
                 {% else %}
