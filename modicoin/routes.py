@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, session as
 from flask_login.utils import login_fresh
 from sqlalchemy.orm import session
 from wtforms.validators import Email
-from modicoin import app, db, bcrypt, login_manager, miner_reward
+from modicoin import app, db, bcrypt, login_manager
 from modicoin.blockpickle import blockchain
 from modicoin.forms import KeyDownForm, RegistrationForm, LoginForm, TransactionForm
 from modicoin.models import User
@@ -95,17 +95,21 @@ def mine():
 @app.route("/mineblock")
 @login_required
 def mineblock():
-	blockchain.mine(current_user.username)
+	for transaction in blockchain.unconfirmed_trainsactions:
+		print(transaction)
+
 	for transaction in blockchain.unconfirmed_trainsactions:
 		amt = transaction.amt
 		if not transaction.sender == "MinerReward":
-			senderbal = User.query.filter_by(username=transaction.sender).first().balance
-			senderbal -= amt
-		receiverbal = User.query.filter_by(username=transaction.receiver).first().balance
-		receiverbal += amt
+			sender = User.query.filter_by(username=transaction.sender).first()
+			sender.balance -= amt
+		receiver = User.query.filter_by(username=transaction.receiver).first()
+		receiver.balance += amt
 		db.session.commit()
+	blockchain.mine(current_user.username)
 	print("Block was successfully mined")
-	transaction = Transaction("MinerRewar", current_user.username, blockchain.miner_reward)
+	transaction = Transaction(sender="MinerReward", receiver=current_user.username, amt=blockchain.miner_reward)
+	blockchain.unconfirmed_trainsactions.append(transaction)
 	flash(f'Block was mined successfuly')
 	return redirect(url_for('mine'))
 

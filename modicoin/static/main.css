@@ -9,6 +9,11 @@
 	--transition-speed: 600ms ease;
 }
 
+html {
+	position: relative;
+	min-height: 100%;
+}
+
 body {
 	color: black;
 	background-color: white;
@@ -202,6 +207,10 @@ main .alert {
 	position:inherit;
 }
 
+.card {
+	margin: 1rem;
+}
+
 .card,
 .card li {
 	position: inherit;
@@ -214,7 +223,7 @@ main .alert {
 	margin-right: 5rem;
 	padding: 1rem;
 	padding-right: 10rem;
-    width: 100%;
+	width: 100%;
 }
 
 table {
@@ -227,11 +236,11 @@ table {
 }
 
 footer {
-	position: fixed;
+	position: absolute;
 	margin-right: 5rem;
 	bottom: 0rem;
 	width: 100%;
-	background-color: var(--text-primary);
+	background-color: #f2f2f2;
 	color: var(--bg-primary);
 	text-align: center;
 }
@@ -246,6 +255,28 @@ footer {
 	color: var(--text-secondary);
 }
 
-.main-3 {
-	display: flex;
+@media only screen and (min-width: 600px) {
+
+	.main-3 {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+	
+}
+
+@media only screen and (max-width: 600px) {
+	.main-3 {
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+	}
+}
+
+.nounder {
+	text-decoration: none !important;
+	color: var(--theme-primary);
+}
+.nounder:hover {
+	color: var(--bg-primary);
 }

@@ -116,7 +116,7 @@ class Block:
 		self.timestamp = timestamp
 		self.nonce = nonce
 		self.miner = miner
-
+		self.hash = self.compute_hash()
 	
 
 	def compute_hash(self):
@@ -137,28 +137,21 @@ class Transaction:
 		self.hash = self.calculate_hash()
 
 	def is_valid(self, private_key, public_key):
-		print("----------------------")
-		print(type(private_key))
-		print(type(public_key))
-		print(type(public_key.encode('utf-8')))
-		print(public_key)
-		print(public_key.encode('utf-8'))
-		print(private_key)
-		print(private_key.encode('utf-8'))
-		print("----------------------")
-
-		pub_key = RSA.import_key(public_key.encode('utf-8'))
-		priv_key = RSA.import_key(private_key.encode('utf-8'))
-		trans_dump_hash = SHA256.new((json.dumps(self.__dict__, sort_keys=True)).encode())
-		signature = pkcs1_15.new(priv_key).sign(trans_dump_hash)
 		try:
+			pub_key = RSA.import_key(public_key.encode('utf-8'))
+			priv_key = RSA.import_key(private_key.encode('utf-8'))
+			trans_dump_hash = SHA256.new((json.dumps(self.__dict__, sort_keys=True)).encode())
+			signature = pkcs1_15.new(priv_key).sign(trans_dump_hash)
 			pkcs1_15.new(pub_key).verify(trans_dump_hash, signature)
 			print("ok")
 			return True
-		except (ValueError, TypeError):
+		except:
 			print("no")
 			return False
 
 	def calculate_hash(self):
 		hash_str_encode = json.dumps(self.__dict__, sort_keys=True).encode()
 		return sha256(hash_str_encode).hexdigest()
+
+	def __str__(self):
+		return f'Transaction: {self.sender}  {self.receiver}  {self.amt}'
