@@ -56,8 +56,7 @@ class Blockchain:
 		else:
 			return False
 
-	def add_new_transaction(self, transaction, sender, receiver, amt):
-
+	def add_new_transaction(self, transaction):
 		self.unconfirmed_trainsactions.append(transaction)
 
 	def generate_keys(self):
@@ -126,12 +125,16 @@ class Transaction:
 		print(type(private_key))
 		print(type(public_key))
 		print(type(public_key.encode('utf-8')))
+		print(public_key)
 		print(public_key.encode('utf-8'))
+		print(private_key)
+		print(private_key.encode('utf-8'))
 		print("----------------------")
-		priv_key = RSA.import_key(private_key.encode('utf-8'))
+
 		pub_key = RSA.import_key(public_key.encode('utf-8'))
+		priv_key = RSA.import_key(private_key.encode('utf-8'))
 		trans_dump_hash = SHA256.new((json.dumps(self.__dict__, sort_keys=True)).encode())
-		signature = pkcs1_15.new(pub_key).sign(trans_dump_hash)
+		signature = pkcs1_15.new(priv_key).sign(trans_dump_hash)
 		try:
 			pkcs1_15.new(pub_key).verify(trans_dump_hash, signature)
 			print("ok")

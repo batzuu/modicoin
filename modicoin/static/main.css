@@ -51,6 +51,7 @@ main {
 	transition: var(--transition-speed);
 	overflow: hidden;
     padding: 0;
+	z-index: 999;
 }
 
 .navbar-nav {
@@ -153,6 +154,7 @@ main {
 	height: 100vh;
 	display: inline;
 	background: var(--bg-primary);
+	z-index: 999;
 }
 
 .form-main {
@@ -213,4 +215,23 @@ main .alert {
 	padding: 1rem;
 	padding-right: 10rem;
     width: 100%;
+}
+
+table {
+	table-layout: fixed;
+	width: 100%;
+}
+
+.table-responsive {
+	max-height: 300px;
+}
+
+footer {
+	position: fixed;
+	margin-right: 5rem;
+	bottom: 0rem;
+	width: 100%;
+	background-color: var(--text-primary);
+	color: var(--bg-primary);
+	text-align: center;
 }

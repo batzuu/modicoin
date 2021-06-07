@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
-from flask_wtf.recaptcha import validators
+from flask_wtf.recaptcha import validators, widgets
 from wtforms import SelectField
-from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField
+from wtforms.fields import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, html5 as h5field
 from wtforms.fields.core import IntegerField
 from wtforms.fields.simple import SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, NumberRange
 from wtforms.widgets.core import CheckboxInput
+from wtforms.widgets import html5 as h5widget
 from modicoin.models import User
 from flask_login import current_user
 
@@ -56,9 +57,9 @@ class TransactionForm(FlaskForm):
     receiver = StringField(
         "Receiver", validators=[DataRequired(), Length(min=2, max=20)]
     )
-    amount = IntegerField("Amount", validators=[DataRequired(), NumberRange(min=1, message="Minimum Transaction amount is 1 modicoin")])
+    amount = h5field.IntegerField("Amount", validators=[DataRequired()], widget=h5widget.NumberInput(min=1, step=1))
 
-    private_key= StringField("Private Key", validators=[DataRequired()])
+    private_key= TextAreaField("Private Key", validators=[DataRequired()], render_kw={"row":70})
 
     submit = SubmitField("Make Transaction")
 

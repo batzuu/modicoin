@@ -2,11 +2,11 @@ from flask import render_template, url_for, flash, redirect, request, session as
 from flask_login.utils import login_fresh
 from sqlalchemy.orm import session
 from wtforms.validators import Email
-from modicoin import app, db, bcrypt, blockchain, login_manager
+from modicoin import app, db, bcrypt, blockchain, login_manager, miner_reward
 from modicoin.forms import KeyDownForm, RegistrationForm, LoginForm, TransactionForm
 from modicoin.models import User
 from flask_login import login_user, current_user, logout_user, login_required
-from modicoin.blockchain import Block, Transaction
+from modicoin.blockchain import Block, Transaction, Blockchain
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -50,17 +50,22 @@ def transaction():
 		print(f"Reciver - {form.receiver.data} Amt - {form.amount.data} Key - ")
 		sender = User.query.filter_by(username=current_user.username).first()
 		receiver = User.query.filter_by(username=form.receiver.data).first()
-		receiver.balance += form.amount.data
-		sender.balance -= form.amount.data
 		print(f'{form.amount.data} from {sender.username} to {receiver.username}')
 		transaction = Transaction(sender.username, receiver.username, int(form.amount.data))
 		pub_key = sender.public_key
 		if transaction.is_valid(form.private_key.data, pub_key):
-			blockchain.unconfirmed_trainsactions.append(transaction)
+			blockchain.add_new_transaction(transaction)
+			receiver.balance += form.amount.data
+			sender.balance -= form.amount.data
+			db.session.commit()
 			flash(f'Transaction was valid and added to unconfirmed pool', 'success')
 		else:
-			flash(f'Transaction failed invalid')
-		return redirect(url_for('home')) 
+			flash(f'Transaction failed invalid KEY!', 'danger')
+		return redirect(url_for('transaction'))
+	
+	form.receiver.data = ""
+	form.amount.data = ""
+	form.private_key.data= ""
 	return render_template("transaction.html", form=form, user=current_user)
 
 @app.route("/login", methods=["GET", "POST"])
@@ -82,6 +87,11 @@ def login():
 			return redirect(url_for("home"))
 		flash("Login failed! Invalid email and/or password", "danger")
 	return render_template("login.html", title="Login", form=form)
+
+@app.route("/mine")
+@login_required
+def mine():
+	return render_template("mine.html", transactions=blockchain.unconfirmed_trainsactions, reward=miner_reward)
 
 @app.route("/account")
 @login_required
