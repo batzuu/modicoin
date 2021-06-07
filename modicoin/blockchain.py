@@ -6,19 +6,27 @@ import time
 from datetime import datetime
 import json
 from hashlib import sha256
+import pickle
+import jsonpickle
 
-
-class Blockchain:
+class Blockchain():
 	def __init__(self):
 		self.unconfirmed_trainsactions = []
 		self.chain = []
 		self.generate_genesis_block()
-		self.miner_reward = 50
+		self.miner_reward = 10
+		self.dump_to_pickle()
 
 	def generate_genesis_block(self):
-		genesis_block = Block(0, [], "0", datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+		genesis_block = Block(0, [], "0", datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), "None")
 		genesis_block_hash = genesis_block.compute_hash()
 		self.chain.append(genesis_block)
+	
+	def dump_to_pickle(self):
+		# Dumping Current Blockchain to file
+		blockchainfile = open("blockchainPickle.obj", "wb")
+		pickle.dump(self, blockchainfile)
+	
 
 	# property decorator to get the last block
 	@property
@@ -45,6 +53,7 @@ class Blockchain:
 			return False
 		block.hash = proof
 		self.chain.append(block)
+		self.dump_to_pickle()
 		return True
 
 	def is_valid_proof(self, block, proof):
@@ -58,6 +67,7 @@ class Blockchain:
 
 	def add_new_transaction(self, transaction):
 		self.unconfirmed_trainsactions.append(transaction)
+		self.dump_to_pickle()
 
 	def generate_keys(self):
 		key = RSA.generate(2048)
@@ -79,7 +89,7 @@ class Blockchain:
 		print(key)
 		return key
 
-	def mine(self):
+	def mine(self, miner):
 		if not self.unconfirmed_trainsactions:
 			return False
 
@@ -89,6 +99,7 @@ class Blockchain:
 			self.unconfirmed_trainsactions,
 			last_block.hash,
 			datetime.now().strftime("%m/%d/%Y, %H:%M:%S"),
+			miner
 		)
 
 		proof = self.proof_of_work(new_block)
@@ -98,18 +109,23 @@ class Blockchain:
 
 
 class Block:
-	def __init__(self, index, transactions, prev_hash, timestamp, nonce=0):
+	def __init__(self, index, transactions, prev_hash, timestamp, miner, nonce=0):
 		self.index = index
 		self.transactions = transactions
 		self.prev_hash = prev_hash
 		self.timestamp = timestamp
-		self.hash = self.compute_hash()
 		self.nonce = nonce
-		self.miner = ""
+		self.miner = miner
+
+	
 
 	def compute_hash(self):
-		block_str = json.dumps(self.__dict__, sort_keys=True)
+		block_str = self.toJSON()
 		return sha256(block_str.encode()).hexdigest()
+
+	def toJSON(self):
+		return jsonpickle.encode(self)
+
 
 
 class Transaction:

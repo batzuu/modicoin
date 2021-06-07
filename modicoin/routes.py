@@ -2,12 +2,14 @@ from flask import render_template, url_for, flash, redirect, request, session as
 from flask_login.utils import login_fresh
 from sqlalchemy.orm import session
 from wtforms.validators import Email
-from modicoin import app, db, bcrypt, blockchain, login_manager, miner_reward
+from modicoin import app, db, bcrypt, login_manager, miner_reward
+from modicoin.blockpickle import blockchain
 from modicoin.forms import KeyDownForm, RegistrationForm, LoginForm, TransactionForm
 from modicoin.models import User
 from flask_login import login_user, current_user, logout_user, login_required
 from modicoin.blockchain import Block, Transaction, Blockchain
 
+miner_reward = blockchain.miner_reward
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -55,9 +57,6 @@ def transaction():
 		pub_key = sender.public_key
 		if transaction.is_valid(form.private_key.data, pub_key):
 			blockchain.add_new_transaction(transaction)
-			receiver.balance += form.amount.data
-			sender.balance -= form.amount.data
-			db.session.commit()
 			flash(f'Transaction was valid and added to unconfirmed pool', 'success')
 		else:
 			flash(f'Transaction failed invalid KEY!', 'danger')
@@ -92,6 +91,25 @@ def login():
 @login_required
 def mine():
 	return render_template("mine.html", transactions=blockchain.unconfirmed_trainsactions, reward=miner_reward)
+
+@app.route("/mineblock")
+@login_required
+def mineblock():
+	blockchain.mine(current_user.username)
+	for transaction in blockchain.unconfirmed_trainsactions:
+		amt = transaction.amt
+		if not transaction.sender == "MinerReward":
+			senderbal = User.query.filter_by(username=transaction.sender).first().balance
+			senderbal -= amt
+		receiverbal = User.query.filter_by(username=transaction.receiver).first().balance
+		receiverbal += amt
+		db.session.commit()
+	print("Block was successfully mined")
+	transaction = Transaction("MinerRewar", current_user.username, blockchain.miner_reward)
+	flash(f'Block was mined successfuly')
+	return redirect(url_for('mine'))
+
+
 
 @app.route("/account")
 @login_required

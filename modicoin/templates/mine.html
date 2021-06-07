@@ -26,7 +26,7 @@
 			{% endfor %}
 		</tbody>
 	</table>
-	<button type="submit" class="btn btn"></button>
+	<button type="button" onclick="location.href='/mineblock'" class="btn btn-primary btn-my mt-3">Mine!</button>
 	{% else %}
 		<div class="text-muted">There are no unconfirmed transactions. Create one <a href="{{ url_for('transaction') }}" class="link-primary">now</a>.</div>
 	{% endif %}

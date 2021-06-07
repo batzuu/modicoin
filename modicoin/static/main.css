@@ -235,3 +235,17 @@ footer {
 	color: var(--bg-primary);
 	text-align: center;
 }
+
+.btn-my {
+	background-color: var(--bg-primary);
+	color: var(--text-primary);
+}
+
+.btn-my:hover {
+	background-color: var(--theme-primary);
+	color: var(--text-secondary);
+}
+
+.main-3 {
+	display: flex;
+}
