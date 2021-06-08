@@ -39,6 +39,12 @@ def register():
 def explore():
 	return render_template("chainexplore.html", blockchain=blockchain)
 
+@app.route("/showtransactions/<index>")
+@login_required
+def showtransactions(index):
+	return render_template("transactionview.html", transactions = blockchain.chain[int(index)].transactions, index=index)
+	
+
 @app.route("/home")
 @login_required
 def home():

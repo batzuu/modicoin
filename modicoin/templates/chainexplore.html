@@ -16,7 +16,7 @@
 						<li class="list-group-item">Previous Block Hash <br>{{ blockObj.prev_hash[0:20] }}</li>
 						<li class="list-group-item">Timestamp<br>{{ blockObj.timestamp }}</li>
 					</ul>
-					<a href="#" class="btn btn-primary">Show Transactions</a>
+					<a href="{{ url_for('showtransactions', index=blockObj.index) }}" class="btn btn-primary">Show Transactions</a>
 				</div>
 			</div>
 		{% endfor %}

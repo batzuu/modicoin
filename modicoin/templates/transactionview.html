@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="main-2">
+	<legend class="border-bottom mb-4">Transactions in Block # {{ index }}</legend>
+	{% if transactions|length %}
+	<div class="text-muted mb-3">These are the confirmed transaction in this block</div>
+	<table class="table table-striped table-hover table-responsive">
+		<thead>
+			<tr class="table-dark">
+				<th scope="col">#</th>
+				<th scope="col">Amount</th>
+				<th scope="col">From</th>
+				<th scope="col">To</th>
+				<th scope="col">Timestamp</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for transaction in transactions %}
+			<tr>
+				<th scope="row">{{ loop.index }}</th>
+				<td>{{ transaction.amt }}</td>
+				<td>{{ transaction.sender }}</td>
+				<td>{{ transaction.receiver }}</td>
+				<td>{{ transaction.time }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+		<div class="text-muted">Genisis block has no transactions.</div>
+	{% endif %}
+	<button type="button" onclick="location.href='/explore'" class="btn btn-primary btn-my mt-3">Back
+
+</div>
+{% endblock content %}

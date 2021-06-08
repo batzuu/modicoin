@@ -280,3 +280,13 @@ footer {
 .nounder:hover {
 	color: var(--bg-primary);
 }
+
+.card .btn {
+	background-color: var(--theme-primary);
+	color: var(--text-secondary);
+}
+
+.card .btn:hover {
+	background-color: var(--bg-secondary);
+	color: var(--text-secondary);
+}
