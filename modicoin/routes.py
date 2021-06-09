@@ -38,7 +38,7 @@ def register():
 @app.route("/explore")
 @login_required
 def explore():
-	return render_template("chainexplore.html", blockchain=blockchain)
+	return render_template("chainexplore.html", blockchain=blockchain, title="Explore")
 
 @app.route("/showtransactions/<index>")
 @login_required
@@ -74,7 +74,7 @@ def transaction():
 	form.receiver.data = ""
 	form.amount.data = ""
 	form.private_key.data= ""
-	return render_template("transaction.html", form=form, user=current_user)
+	return render_template("transaction.html", form=form, user=current_user, title="Send Modicoin")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -99,7 +99,7 @@ def login():
 @app.route("/mine")
 @login_required
 def mine():
-	return render_template("mine.html", transactions=blockchain.unconfirmed_trainsactions, reward=miner_reward)
+	return render_template("mine.html", transactions=blockchain.unconfirmed_trainsactions, reward=miner_reward, title="Mine")
 
 @app.route("/mineblock")
 @login_required
@@ -128,7 +128,7 @@ def mineblock():
 @app.route("/account")
 @login_required
 def account():
-	return render_template("account.html", user=current_user)
+	return render_template("account.html", user=current_user, title="Your Account")
 
 @app.route("/about")
 def about():
@@ -147,7 +147,7 @@ def key_download():
 		flash(f'Welcom {current_user.username}!', 'success')
 		return redirect(url_for('home'))
 	key = request.args.get('key')
-	return render_template("key_download.html", key=sess["key"], user=current_user, form=form)
+	return render_template("key_download.html", key=sess["key"], user=current_user, form=form, title="Key")
 
 
 
