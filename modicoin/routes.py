@@ -112,9 +112,9 @@ def mineblock():
 		if not transaction.sender == "MinerReward":
 			sender = User.query.filter_by(username=transaction.sender).first()
 			sender.balance -= amt
+			sender.pending_transaction = 0
 		receiver = User.query.filter_by(username=transaction.receiver).first()
 		receiver.balance += amt
-		sender.pending_transaction = 0
 		db.session.commit()
 	blockchain.mine(current_user.username)
 	print("Block was successfully mined")
