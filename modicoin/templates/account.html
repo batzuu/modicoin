@@ -18,7 +18,11 @@
 		</div>
 		<div class="mb-3">
 			<div class="label">Balance</div>
-			<input class="form-control" placeholder="{{ user.balance }}">
+			{% if user.pending_transaction %}
+				<input class="form-control" placeholder="{{ user.balance }} - {{ user.pending_transaction }}(pending)">
+			{% else %}
+				<input class="form-control" placeholder="{{ user.balance }}">
+			{% endif %}
 		</div>
 	</fieldset>
 </section>
