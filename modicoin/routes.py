@@ -145,7 +145,7 @@ def key_download():
 	form = KeyDownForm()
 	if form.validate_on_submit():
 		flash(f'Welcom {current_user.username}!', 'success')
-		return redirect(url_for('home'))
+		return redirect(url_for('explore'))
 	key = request.args.get('key')
 	return render_template("key_download.html", key=sess["key"], user=current_user, form=form, title="Key")
 
@@ -154,7 +154,7 @@ def key_download():
 @app.route("/")
 def index():
 	if current_user.is_authenticated:
-		return redirect(url_for("home"))
+		return redirect(url_for("explore"))
 	else:
 		return redirect(url_for("login"))
 
